@@ -22,14 +22,8 @@ pipeline {
         }
         stage('Terraform Planning') { 
             steps { 
-                sh 'cd initialization && terraform plan -no-color -out=terraform_plan'
-                sh 'cd initialization && terraform show -json ./terraform_plan > terraform_plan.json'
+                sh 'cd initialization && terraform plan'
             } 
-        }
-        stage('archive terrafrom plan output') {
-            steps {
-                archiveArtifacts artifacts: 'terraform_plan.json', excludes: 'output/*.md', onlyIfSuccessful: true
-            }
         }
         stage('Review and Run terraform apply') {
             steps {
