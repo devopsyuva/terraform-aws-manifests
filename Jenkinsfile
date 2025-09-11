@@ -1,5 +1,8 @@
+// Groovy Declarative Pipeline
 pipeline { 
-    agent any
+    agent {
+        label 'docker'
+    }
     environment { 
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY') 
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
@@ -8,7 +11,7 @@ pipeline {
         stage('Terraform Initialization') { 
             steps { 
                 sh 'cd initialization && terraform init || terraform init -upgrade'
-            } 
+            }
         } 
         stage('Terraform Format') { 
             steps { 
