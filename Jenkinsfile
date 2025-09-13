@@ -13,17 +13,17 @@ pipeline {
     stages { 
         stage('Terraform Initialization') { 
             steps { 
-                sh 'terraform init || terraform init -upgrade'
+                sh 'cd initialization && terraform init || terraform init -upgrade'
             } 
         } 
         stage('Terraform Format') { 
             steps { 
-                sh 'terraform fmt -check || exit 0' 
+                sh 'cd initialization && terraform fmt -check || exit 0' 
             } 
         } 
         stage('Terraform Validate') { 
             steps { 
-                sh 'terraform validate'
+                sh 'cd initialization && terraform validate'
             } 
         }
         stage('SonarQube Analysis') {
@@ -38,8 +38,8 @@ pipeline {
         }
         stage('Terraform Planning') { 
             steps { 
-                sh 'terraform plan -no-color -out=terraform_plan'
-                sh 'terraform show -json ./terraform_plan > terraform_plan.json'
+                sh 'cd initialization && terraform plan -no-color -out=terraform_plan'
+                sh 'cd initialization && terraform show -json ./terraform_plan > terraform_plan.json'
             } 
         }
         stage('archive terrafrom plan output') {
@@ -59,7 +59,7 @@ pipeline {
             steps {
                 script {
                     if (env.selected_action == 'apply') {
-                        sh 'terraform apply -auto-approve'
+                        sh 'cd initialization && terraform apply -auto-approve'
                     } else {
                         sh 'echo Review failed and terraform apply was aborted'
                         sh 'exit 0'
@@ -79,7 +79,7 @@ pipeline {
             steps {
                 script {
                     if (env.selected_action == "destroy") {
-                        sh 'terraform destroy -auto-approve'
+                        sh 'cd initialization && terraform destroy -auto-approve'
                     } else {
                         sh 'echo We are not destroying the resource initialted, aborted!!!'
                         sh 'exit 0'
