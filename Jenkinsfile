@@ -44,7 +44,7 @@ pipeline {
         }
         stage('archive terrafrom plan output') {
             steps {
-                archiveArtifacts artifacts: 'terraform_plan.json', excludes: 'output/*.md', onlyIfSuccessful: true
+                archiveArtifacts artifacts: 'initialization/terraform_plan.json', excludes: 'output/*.md', onlyIfSuccessful: true
             }
         }
         stage('Review and Run terraform apply') {
